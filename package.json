@@ -1,0 +1,7 @@
+{
+  "name": "mmmarco-site-tests",
+  "private": true,
+  "scripts": {
+    "test": "node tests/validate.js"
+  }
+}

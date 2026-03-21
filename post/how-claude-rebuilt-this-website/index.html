@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The story of how I teamed up with an AI assistant to redesign and modernize my personal website from scratch.">
+  <meta name="author" content="Marco Montalto Monella">
+  <title>How Claude Rebuilt This Website — Marco Montalto Monella</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome-v4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXH6Y7X45B');
+  </script>
+</head>
+
+<body class="page-inner">
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/">mmmarco</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero hero--compact" style="background-image: url('/img/post-bg.jpg')">
+    <div class="hero__content">
+      <h1 class="hero__title">How Claude Rebuilt This Website</h1>
+      <p class="hero__subtitle">The story of how I teamed up with an AI assistant to redesign and modernize my personal website from scratch.</p>
+    </div>
+  </header>
+
+  <!-- Article -->
+  <article class="article">
+    <div class="article-meta">
+      <span><i class="fa fa-calendar"></i> March 21, 2026</span>
+      <span><i class="fa fa-user"></i> Marco Montalto Monella</span>
+    </div>
+
+    <p>If you're reading this, you're looking at a website that was almost entirely rebuilt by <a href="https://claude.ai">Claude</a>, Anthropic's AI assistant. And honestly? It was one of the most interesting side projects I've done in a while.</p>
+<h2 id="the-backstory">The backstory</h2>
+<p>My personal website had been running on <a href="https://gohugo.io/">Hugo</a> for years. It was built with the Bootstrap 3 "Agency" and "Clean Blog" themes — functional, but showing its age. The styling had that unmistakable 2015 vibe: heavy shadows, rigid grids, and a design language that felt more like a startup landing page template than a personal site.</p>
+<p>I'd been meaning to modernize it for a while, but between work and life, it kept falling to the bottom of the to-do list. Then I thought — why not see what Claude can do with it?</p>
+<h2 id="what-changed">What changed</h2>
+<p>Pretty much everything:</p>
+<ul>
+<li><strong>Dropped Bootstrap 3</strong> — replaced with modern CSS using custom properties, CSS Grid, and Flexbox. No framework dependency needed in 2026.</li>
+<li><strong>Dropped jQuery</strong> — vanilla JavaScript handles everything: smooth scrolling, mobile menu, scroll animations, and form submission.</li>
+<li><strong>Fixed all the broken paths</strong> — the old site used absolute URLs (<code>https://mmmarco.com/...</code>) everywhere, which meant nothing worked when previewing locally.</li>
+<li><strong>Unified the design</strong> — the homepage and blog pages used to be two completely different templates. Now everything shares one clean stylesheet.</li>
+<li><strong>Removed Hugo artifacts</strong> — categories, tags, pagination directories, XML feeds... all the generated cruft from a static site generator I was no longer using.</li>
+<li><strong>Created a simple blog build system</strong> — instead of Hugo's complexity, a single Python script converts Markdown files into blog posts. Write a <code>.md</code> file, run the script, done.</li>
+</ul>
+<h2 id="the-design">The design</h2>
+<p>The new look is clean and minimal: a teal-and-slate color palette, the Inter typeface, generous whitespace, and subtle animations that respect the <code>prefers-reduced-motion</code> setting. The hero sections use gradient overlays on photos, cards have gentle hover effects, and the timeline on the homepage actually looks like it belongs in this decade.</p>
+<h2 id="what-i-learned">What I learned</h2>
+<p>Working with Claude on this was surprisingly collaborative. I'd describe what I wanted — "fix the broken styling and pick a fresh modern look" — and it would make decisions about color palettes, layout systems, and code architecture. When something wasn't right, I'd course-correct, and it would adapt.</p>
+<p>The whole process felt less like using a tool and more like pair-programming with someone who has very strong opinions about CSS custom properties.</p>
+<h2 id="what-s-next">What's next</h2>
+<p>This blog now runs on the simplest possible setup: Markdown files in a <code>_posts/</code> folder, a Python build script, and static HTML served by GitHub Pages. No build tools, no npm dependencies, no config files. If I want to write a new post, I create a Markdown file and run <code>python3 build.py</code>.</p>
+<p>Sometimes the best stack is the one with the fewest moving parts.</p>
+
+    <div class="article-nav">
+      <a href="/blog/">&larr; Back to Blog</a>
+    </div>
+  </article>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <ul class="footer__social">
+      <li><a href="mailto:contact@mmmarco.com" title="Email"><i class="fa fa-envelope"></i></a></li>
+      <li><a href="https://www.linkedin.com/in/montaltomonellamarco/" title="LinkedIn"><i class="fa fa-linkedin"></i></a></li>
+      <li><a href="https://github.com/MarcoMontaltoMonella" title="GitHub"><i class="fa fa-github"></i></a></li>
+    </ul>
+    <p class="footer__copy">Published under the Apache License 2.0.</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
