@@ -1,173 +1,80 @@
 <!DOCTYPE html>
-<html lang="en-us">
-
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Blog posts by Marco Montalto Monella — software engineering, technology, and more.">
+  <meta name="author" content="Marco Montalto Monella">
+  <title>Blog — Marco Montalto Monella</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Blog posts by Marco Montalto Monella - software engineering, technology, and more.">
-    <meta name="author" content="Marco Montalto Monella">
-    <meta name="keywords" content="software engineering, technology, blog">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome-v4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-
-    <title>Blog -- Marco Montalto Monella</title>
-
-    <link href="https://mmmarco.com/css/bootstrap-v3.3.7/bootstrap.min.css" rel="stylesheet">
-    <link href="https://mmmarco.com/css/clean-blog.min.css" rel="stylesheet">
-    <link href="https://mmmarco.com/font-awesome-v4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" type="text/css">
-    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-
-    <link rel="shortcut icon" type="image/x-icon" href="https://mmmarco.com/favicon.ico">
-    <link rel="icon" type="image/x-icon" href="https://mmmarco.com/favicon.ico">
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXH6Y7X45B');
-    </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXH6Y7X45B');
+  </script>
 </head>
 
-<body>
+<body class="page-inner">
 
-    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-        <div class="container-fluid">
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/">mmmarco</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/blog/" class="active">Blog</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
 
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="https://mmmarco.com/">Marco Montalto Monella</a>
-            </div>
+  <!-- Hero -->
+  <header class="hero hero--compact" style="background-image: url('/img/home-bg.jpg')">
+    <div class="hero__content">
+      <h1 class="hero__title">Blog</h1>
+      <p class="hero__subtitle">Thoughts on software engineering, technology, and life</p>
+    </div>
+  </header>
 
-
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-
-                    <li>
-                        <a href="https://mmmarco.com/">Home</a>
-                    </li>
-
-                    <li>
-                        <a href="https://mmmarco.com/about/">About</a>
-                    </li>
-
-                    <li>
-                        <a href="https://mmmarco.com/blog/">Blog</a>
-                    </li>
-
-                    <li>
-                        <a href="https://mmmarco.com/contact/">Contact</a>
-                    </li>
-
-                  </ul>
-            </div>
-
-
-        </div>
-
-    </nav>
-
-
-    <header class="intro-header" style="background-image: url('https://mmmarco.com/img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>Blog</h1>
-             <hr class="small">
-             <span class="subheading">Thoughts on software engineering, technology, and life</span>
-           </div>
-         </div>
-       </div>
-     </div>
-    </header>
-
-
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
-                             <div class="post-preview">
-                 <a href="https://mmmarco.com/post/post-01/">
-                      <h2 class="post-title">Building a theme with Hugo</h2>
-                      <h3 class="post-subtitle">Tutorial to build a Hugo Theme</h3>
-                    </a>
-                    <p class="post-meta">
-                      A 34 minute read,
-Posted by <a href="#">Marco Montalto Monella</a>
-<br />
-In <a href="https://mmmarco.com/categories/development">Development</a>, <a href="https://mmmarco.com/categories/golang">Golang</a>
-
-<br />
-Tags <a href="https://mmmarco.com/tags/go">go</a>, <a href="https://mmmarco.com/tags/golang">golang</a>, <a href="https://mmmarco.com/tags/templates">templates</a>, <a href="https://mmmarco.com/tags/themes">themes</a>, <a href="https://mmmarco.com/tags/development">development</a>
-
-                  </p>
-                </div>
-                <hr>
-
-          <div class="text-center" style="padding: 40px 0;">
-            <p class="text-muted" style="font-size: 18px;">More posts coming soon. Stay tuned!</p>
+  <!-- Posts -->
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="posts">
+        <a class="post-card" href="/post/how-claude-rebuilt-this-website/">
+          <h2 class="post-card__title">How Claude Rebuilt This Website</h2>
+          <p class="post-card__excerpt">The story of how I teamed up with an AI assistant to redesign and modernize my personal website from scratch.</p>
+          <div class="post-card__meta">
+            <span><i class="fa fa-calendar"></i> March 21, 2026</span>
           </div>
-
-        </div>
+        </a>
       </div>
     </div>
+  </section>
 
-    <hr>
+  <!-- Footer -->
+  <footer class="footer">
+    <ul class="footer__social">
+      <li><a href="mailto:contact@mmmarco.com" title="Email"><i class="fa fa-envelope"></i></a></li>
+      <li><a href="https://www.linkedin.com/in/montaltomonellamarco/" title="LinkedIn"><i class="fa fa-linkedin"></i></a></li>
+      <li><a href="https://github.com/MarcoMontaltoMonella" title="GitHub"><i class="fa fa-github"></i></a></li>
+    </ul>
+    <p class="footer__copy">Published under the Apache License 2.0.</p>
+  </footer>
 
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                  <ul class="list-inline text-center">
-
-                      <li>
-                        <a href="mailto:contact@mmmarco.com">
-                          <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
-                          </span>
-                        </a>
-                      </li>
-
-                      <li>
-                        <a href="https://www.linkedin.com/in/montaltomonellamarco/">
-                          <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
-                          </span>
-                        </a>
-                      </li>
-
-                      <li>
-                        <a href="https://github.com/MarcoMontaltoMonella">
-                          <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                          </span>
-                        </a>
-                      </li>
-
-                  </ul>
-                  <p class="copyright text-muted">Code released under the Apache 2.0 license.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-    <script src="https://mmmarco.com/js/jquery-v3.3.1/jquery.min.js"></script>
-    <script src="https://mmmarco.com/js/bootstrap-v3.3.7/bootstrap.min.js"></script>
-    <script src="https://mmmarco.com/js/clean-blog.js"></script>
-
+  <script src="/js/main.js"></script>
 </body>
-
 </html>

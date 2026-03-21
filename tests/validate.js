@@ -37,16 +37,20 @@ function fileExists(relPath) {
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Extract all local asset paths (CSS, JS, images) from href/src attributes. */
+/** Extract root-relative asset paths from href/src attributes. */
 function extractLocalPaths(html) {
   const matches = [];
-  const re = /(?:href|src)=["']https:\/\/mmmarco\.com\/(.*?)["']/g;
+  // Match root-relative paths like /css/style.css, /img/header-bg.jpg
+  const re = /(?:href|src)=["'](\/[^"'#]+)["']/g;
   let m;
   while ((m = re.exec(html)) !== null) {
-    // Normalise double slashes produced by Hugo templates
-    const p = m[1].replace(/^\/+/, "");
-    // Skip fragment-only links (#section), empty paths, and external links
-    if (!p || p.startsWith("#")) continue;
+    let p = m[1];
+    // Skip external, protocol-relative, or fragment-only links
+    if (p.startsWith("//") || p.startsWith("http")) continue;
+    // Remove leading slash for filesystem check
+    p = p.replace(/^\//, "");
+    // Skip empty paths
+    if (!p) continue;
     matches.push(p);
   }
   return matches;
@@ -63,9 +67,13 @@ console.log("\n=== Homepage (index.html) ===");
   assert(html.includes('<meta name="viewport"'), "has viewport meta");
   assert(html.includes("<title>Marco Montalto Monella</title>"), "has title");
 
-  // Modern font
+  // Modern design — no old frameworks
   assert(html.includes("Inter"), "uses Inter font");
-  assert(!html.includes("Kaushan"), "no longer uses Kaushan Script font");
+  assert(!html.includes("Kaushan"), "no Kaushan Script font");
+  assert(!html.includes("bootstrap"), "no Bootstrap references");
+  assert(!html.includes("jquery"), "no jQuery references");
+  assert(html.includes("/css/style.css"), "uses new style.css");
+  assert(html.includes("/js/main.js"), "uses new main.js");
 
   // GA4 only
   assert(html.includes("G-XXH6Y7X45B"), "includes GA4 tag");
@@ -76,21 +84,21 @@ console.log("\n=== Homepage (index.html) ===");
   assert(!html.includes("respond.js"), "removed IE8 respond.js");
 
   // Empty sections removed
-  assert(!html.includes('id="portfolio"'), "removed empty portfolio/Believe section");
+  assert(!html.includes('id="portfolio"'), "removed empty portfolio section");
   assert(!html.includes("sponsor-1"), "removed empty sponsors section");
 
   // Timeline updated
-  assert(html.includes("2019-2023"), "timeline includes Meta years (2019-2023)");
-  assert(html.includes("2023-Present"), "timeline includes Pure Storage (2023-Present)");
+  assert(html.includes("2023"), "timeline includes recent years");
   assert(html.includes("Pure Storage"), "mentions Pure Storage");
+  assert(html.includes("Meta"), "mentions Meta");
 
-  // JS includes point to versioned paths
-  assert(html.includes("js/jquery-v3.3.1/jquery.min.js"), "jQuery uses versioned path");
-  assert(
-    html.includes("js/bootstrap-v3.3.7/bootstrap.min.js"),
-    "Bootstrap JS uses versioned path"
-  );
-  assert(html.includes("js/agency.js"), "includes agency.js");
+  // Uses root-relative paths (not absolute mmmarco.com URLs)
+  assert(!html.includes("https://mmmarco.com/css"), "no absolute CSS paths");
+  assert(!html.includes("https://mmmarco.com/js"), "no absolute JS paths");
+  assert(!html.includes("https://mmmarco.com/img"), "no absolute image paths");
+
+  // Has navigation
+  assert(html.includes("Blog"), "has Blog nav link");
 
   // Asset files exist
   const assets = extractLocalPaths(html);
@@ -105,33 +113,24 @@ console.log("\n=== Blog (blog/index.html) ===");
 {
   const html = readFile("blog/index.html");
 
-  // Fixed subtitle
-  assert(!html.includes("Blog Description"), 'no placeholder "Blog Description" subtitle');
-  assert(
-    html.includes("Thoughts on software engineering"),
-    "has real blog subtitle"
-  );
+  // Subtitle
+  assert(!html.includes("Blog Description"), 'no placeholder subtitle');
+  assert(html.includes("Thoughts on software engineering"), "has real blog subtitle");
 
   // Placeholder posts removed
   assert(!html.includes("Second post"), "removed placeholder post-02");
   assert(!html.includes("Third post"), "removed placeholder post-03");
   assert(!html.includes(">Posts<"), "removed Posts index entry");
 
-  // Real post kept
+  // Real post present
   assert(
-    html.includes("Building a theme with Hugo"),
-    "kept real blog post (post-01)"
+    html.includes("How Claude Rebuilt This Website"),
+    "has the Claude rebuild blog post"
   );
 
-  // Fixed asset paths
-  assert(
-    html.includes("css/bootstrap-v3.3.7/bootstrap.min.css"),
-    "CSS uses versioned bootstrap path"
-  );
-  assert(
-    html.includes("js/jquery-v3.3.1/jquery.min.js"),
-    "JS uses versioned jQuery path"
-  );
+  // Modern design
+  assert(html.includes("/css/style.css"), "uses new style.css");
+  assert(!html.includes("bootstrap"), "no Bootstrap references");
 
   // Has Home nav link
   assert(html.includes(">Home<"), "has Home navigation link");
@@ -142,34 +141,26 @@ console.log("\n=== Blog (blog/index.html) ===");
 
   // No old analytics
   assert(!html.includes("UA-93253018-1"), "no legacy Universal Analytics");
+
+  // Root-relative paths
+  assert(!html.includes("https://mmmarco.com/css"), "no absolute CSS paths");
 }
 
 // ===================================================================
-console.log("\n=== About (about/index.html) ===");
+console.log("\n=== About section (on homepage) ===");
 // ===================================================================
 {
-  const html = readFile("about/index.html");
+  const html = readFile("index.html");
 
-  // No Lorem Ipsum
-  assert(!html.includes("Lorem ipsum"), "no Lorem Ipsum placeholder text");
-
-  // Has real content
-  assert(
-    html.includes("Marco Montalto Monella"),
-    "mentions name in bio"
-  );
+  // About section exists on homepage with anchor
+  assert(html.includes('id="about"'), "homepage has #about anchor");
+  assert(html.includes("Marco Montalto Monella"), "mentions name");
   assert(html.includes("Pure Storage"), "mentions current employer");
   assert(html.includes("Meta"), "mentions former employer");
   assert(html.includes("NYU"), "mentions education");
 
-  // Fixed asset paths
-  assert(
-    html.includes("css/bootstrap-v3.3.7/bootstrap.min.css"),
-    "CSS uses versioned bootstrap path"
-  );
-
-  // Has Home nav link
-  assert(html.includes(">Home<"), "has Home navigation link");
+  // Standalone about page removed
+  assert(!fileExists("about/index.html"), "no standalone /about/ page");
 }
 
 // ===================================================================
@@ -178,15 +169,9 @@ console.log("\n=== Contact (contact/index.html) ===");
 {
   const html = readFile("contact/index.html");
 
-  // Fixed asset paths
-  assert(
-    html.includes("css/bootstrap-v3.3.7/bootstrap.min.css"),
-    "CSS uses versioned bootstrap path"
-  );
-  assert(
-    html.includes("js/jquery-v3.3.1/jquery.min.js"),
-    "JS uses versioned jQuery path"
-  );
+  // Modern design
+  assert(html.includes("/css/style.css"), "uses new style.css");
+  assert(!html.includes("bootstrap"), "no Bootstrap references");
 
   // Has contact form
   assert(html.includes('id="contactForm"'), "has contact form");
@@ -196,6 +181,9 @@ console.log("\n=== Contact (contact/index.html) ===");
 
   // No old analytics
   assert(!html.includes("UA-93253018-1"), "no legacy Universal Analytics");
+
+  // Root-relative paths
+  assert(!html.includes("https://mmmarco.com/css"), "no absolute CSS paths");
 }
 
 // ===================================================================
@@ -208,24 +196,22 @@ console.log("\n=== 404 Page (404.html) ===");
   assert(html.includes("Go Home"), "has Go Home button");
   assert(!html.includes("html5shiv"), "no IE8 shims");
   assert(!html.includes("UA-93253018-1"), "no legacy Universal Analytics");
-  assert(!html.includes('id="portfolio"'), "no Believe nav link");
+  assert(!html.includes('id="portfolio"'), "no portfolio section");
+  assert(html.includes("/css/style.css"), "uses new style.css");
 }
 
 // ===================================================================
-console.log("\n=== Blog Post (post/post-01/index.html) ===");
+console.log("\n=== Blog Post (post/how-claude-rebuilt-this-website) ===");
 // ===================================================================
 {
-  const html = readFile("post/post-01/index.html");
+  const postPath = "post/how-claude-rebuilt-this-website/index.html";
+  assert(fileExists(postPath), "blog post HTML exists");
 
-  // Fixed asset paths
-  assert(
-    html.includes("css/bootstrap-v3.3.7/bootstrap.min.css"),
-    "CSS uses versioned bootstrap path"
-  );
-  assert(
-    html.includes("js/jquery-v3.3.1/jquery.min.js"),
-    "JS uses versioned jQuery path"
-  );
+  const html = readFile(postPath);
+
+  // Modern design
+  assert(html.includes("/css/style.css"), "uses new style.css");
+  assert(!html.includes("bootstrap"), "no Bootstrap references");
 
   // Has Home nav link
   assert(html.includes(">Home<"), "has Home navigation link");
@@ -234,35 +220,67 @@ console.log("\n=== Blog Post (post/post-01/index.html) ===");
   assert(html.includes("fa-linkedin"), "footer has LinkedIn icon");
   assert(html.includes("fa-github"), "footer has GitHub icon");
 
-  // No old analytics
-  assert(!html.includes("UA-93253018-1"), "no legacy Universal Analytics");
-
   // Has GA4
   assert(html.includes("G-XXH6Y7X45B"), "has GA4 tag");
+  assert(!html.includes("UA-93253018-1"), "no legacy Universal Analytics");
+
+  // Content
+  assert(html.includes("Claude"), "mentions Claude in content");
+  assert(html.includes("Back to Blog"), "has back to blog link");
+
+  // Root-relative paths
+  assert(!html.includes("https://mmmarco.com/css"), "no absolute CSS paths");
 }
 
 // ===================================================================
-console.log("\n=== CSS Modernization (css/agency.css) ===");
+console.log("\n=== CSS (css/style.css) ===");
 // ===================================================================
 {
-  const css = readFile("css/agency.css");
+  const css = readFile("css/style.css");
 
-  // New color palette
+  // Color palette
   assert(css.includes("#0d9488"), "uses teal primary color (#0d9488)");
   assert(css.includes("#1e293b"), "uses dark slate (#1e293b)");
   assert(css.includes("#5eead4"), "uses mint accent (#5eead4)");
 
-  // Old Facebook blue gone
-  assert(!css.includes("#3b5998"), "removed Facebook blue (#3b5998)");
+  // No old Facebook blue
+  assert(!css.includes("#3b5998"), "no Facebook blue (#3b5998)");
 
   // Modern font
-  assert(css.includes('"Inter"'), "uses Inter font family");
-  assert(!css.includes("Kaushan"), "removed Kaushan Script");
+  assert(css.includes("Inter"), "uses Inter font family");
+  assert(!css.includes("Kaushan"), "no Kaushan Script");
 
-  // Modern features
+  // Modern CSS features
+  assert(css.includes("--color-primary"), "uses CSS custom properties");
+  assert(css.includes("grid"), "uses CSS Grid");
   assert(css.includes("gradient"), "uses CSS gradients");
   assert(css.includes("box-shadow"), "uses box shadows");
-  assert(css.includes("translateY"), "uses transform for hover effects");
+  assert(css.includes("translateY"), "uses transforms for hover effects");
+}
+
+// ===================================================================
+console.log("\n=== Hugo artifacts removed ===");
+// ===================================================================
+{
+  assert(!fileExists("categories"), "no categories/ directory");
+  assert(!fileExists("tags"), "no tags/ directory");
+  assert(!fileExists("post/index.html"), "no post/index.html");
+  assert(!fileExists("post/index.xml"), "no post/index.xml");
+  assert(!fileExists("index.xml"), "no root index.xml");
+  assert(!fileExists("sitemap.xml"), "no sitemap.xml");
+  assert(!fileExists("post/page"), "no post/page/ directory");
+}
+
+// ===================================================================
+console.log("\n=== Build system ===");
+// ===================================================================
+{
+  assert(fileExists("build.py"), "build.py exists");
+  assert(fileExists("_posts"), "_posts/ directory exists");
+  assert(
+    fileExists("_posts/2026-03-21-how-claude-rebuilt-this-website.md"),
+    "first blog post markdown exists"
+  );
 }
 
 // ===================================================================
