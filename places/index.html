@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Curated Google Maps lists by Marco Montalto Monella — handpicked places, food spots, and travel recommendations around the world.">
+  <meta name="author" content="Marco Montalto Monella">
+  <title>Places — Marco Montalto Monella</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome-v4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXH6Y7X45B');
+  </script>
+</head>
+
+<body class="page-inner">
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="/">mmmarco</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/places/" class="active">Places</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero hero--compact" style="background-image: url('/img/home-bg.jpg')">
+    <div class="hero__content">
+      <h1 class="hero__title">Places</h1>
+      <p class="hero__subtitle">Curated Google Maps lists from my travels &amp; favorite spots</p>
+    </div>
+  </header>
+
+  <!-- Intro -->
+  <section class="section">
+    <div class="container container--narrow">
+      <div class="section__header fade-in">
+        <p class="section__subtitle">
+          Over the years I&rsquo;ve carefully curated lists of places I love &mdash; restaurants, viewpoints,
+          hidden gems and whole itineraries. Tap any list below to open it in Google Maps, where you can
+          browse every pin, get directions, and save it to your own account.
+        </p>
+      </div>
+
+      <!-- ============================================================
+           HOW TO ADD A NEW LIST
+           ------------------------------------------------------------
+           1. In the Google Maps app, open your list → Share → Copy link.
+              It looks like: https://maps.app.goo.gl/XXXXXXXX
+           2. Copy one <a class="place-card"> block below and paste it
+              inside <div class="places-grid">.
+           3. Fill in:
+                href ......... your shared list link
+                emoji ........ optional leading emoji for the cover
+                title ........ the list name
+                description .. a short blurb (1–2 sentences)
+                count badge .. optional "N places" or a region tag
+           4. (Optional) Add a cover photo: put an image in /img/places/
+              and replace the place-card__cover div with:
+                <div class="place-card__cover"
+                     style="background-image:url('/img/places/your-photo.jpg')"></div>
+           ============================================================ -->
+
+      <div class="places-grid fade-in">
+
+        <!-- ── Napoli e Costiera Amalfitana ── -->
+        <a class="place-card" href="https://maps.app.goo.gl/kMrDBRQmu2VuBZjcA" target="_blank" rel="noopener">
+          <div class="place-card__cover place-card__cover--gradient">
+            <span class="place-card__emoji">☀️</span>
+          </div>
+          <div class="place-card__body">
+            <h2 class="place-card__title">Napoli e Costiera Amalfitana</h2>
+            <p class="place-card__desc">
+              My handpicked spots across Naples and the Amalfi Coast &mdash; where to eat,
+              what to see, and the views worth the climb.
+            </p>
+            <span class="place-card__cta">
+              View list on Google Maps <i class="fa fa-external-link"></i>
+            </span>
+          </div>
+        </a>
+
+        <!-- Add more <a class="place-card"> blocks here (see instructions above). -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <ul class="footer__social">
+      <li><a href="mailto:contact@mmmarco.com" title="Email"><i class="fa fa-envelope"></i></a></li>
+      <li><a href="https://www.linkedin.com/in/montaltomonellamarco/" title="LinkedIn"><i class="fa fa-linkedin"></i></a></li>
+      <li><a href="https://github.com/MarcoMontaltoMonella" title="GitHub"><i class="fa fa-github"></i></a></li>
+    </ul>
+    <p class="footer__copy">Published under the Apache License 2.0.</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

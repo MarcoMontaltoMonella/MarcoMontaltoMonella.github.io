@@ -243,6 +243,7 @@ POST_TEMPLATE = """\
       <ul class="nav__links">
         <li><a href="/">Home</a></li>
         <li><a href="/#about">About</a></li>
+        <li><a href="/places/">Places</a></li>
         <li><a href="/blog/">Blog</a></li>
         <li><a href="/contact/">Contact</a></li>
       </ul>
@@ -345,6 +346,7 @@ def generate_blog_index(posts):
       <ul class="nav__links">
         <li><a href="/">Home</a></li>
         <li><a href="/#about">About</a></li>
+        <li><a href="/places/">Places</a></li>
         <li><a href="/blog/" class="active">Blog</a></li>
         <li><a href="/contact/">Contact</a></li>
       </ul>
