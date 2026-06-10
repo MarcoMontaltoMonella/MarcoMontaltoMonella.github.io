@@ -299,6 +299,15 @@ console.log("\n=== SEO ===");
     "homepage has Person structured data"
   );
   assert(home.includes('rel="canonical"'), "homepage has canonical link");
+
+  assert(fileExists("llms.txt"), "llms.txt exists");
+  const llms = readFile("llms.txt");
+  assert(llms.startsWith("# Marco Montalto Monella"), "llms.txt has H1 title");
+  assert(llms.includes("> "), "llms.txt has summary blockquote");
+  assert(
+    llms.includes("/post/how-claude-rebuilt-this-website/"),
+    "llms.txt lists blog post"
+  );
 }
 
 // ===================================================================

@@ -28,6 +28,7 @@ POSTS_DIR = ROOT / "_posts"
 OUTPUT_DIR = ROOT / "post"
 BLOG_INDEX = ROOT / "blog" / "index.html"
 SITEMAP = ROOT / "sitemap.xml"
+LLMS = ROOT / "llms.txt"
 SITE_URL = "https://mmmarco.com"
 
 # Static pages to include in the sitemap (path, change-frequency, priority)
@@ -428,6 +429,40 @@ def generate_sitemap(posts):
     )
 
 
+def generate_llms(posts):
+    """Generate llms.txt — a Markdown map of the site for LLMs (llmstxt.org)."""
+    post_lines = [
+        f"- [{p['title']}]({SITE_URL}/post/{p['slug']}/): {p['description']}"
+        for p in posts
+    ] or ["- No posts yet."]
+
+    return (
+        "# Marco Montalto Monella\n\n"
+        "> Personal website and blog of Marco Montalto Monella, a software "
+        "engineer based in the San Francisco Bay Area. Currently at Pure "
+        "Storage, formerly a Production Engineer on Core Data at Meta. "
+        "Alumnus of NYU and Politecnico di Torino.\n\n"
+        "Marco is a software engineer who builds infrastructure at scale. He "
+        "cares about innovation, health, and the environment. Outside of work "
+        "he does gymnastics, beach volleyball, and running.\n\n"
+        "## Main pages\n\n"
+        f"- [Home]({SITE_URL}/): Overview of who Marco is, what drives him, "
+        "his journey, and how to get in touch.\n"
+        f"- [Blog]({SITE_URL}/blog/): Thoughts on software engineering, "
+        "technology, and life.\n"
+        f"- [Contact]({SITE_URL}/contact/): Contact form for getting in touch.\n\n"
+        "## Blog posts\n\n"
+        + "\n".join(post_lines)
+        + "\n\n## Optional\n\n"
+        f"- [PGP/GPG public key]({SITE_URL}/pgpkey.html): Public key for "
+        "sending Marco encrypted email.\n"
+        "- [GitHub](https://github.com/MarcoMontaltoMonella): Marco's "
+        "open-source code and projects.\n"
+        "- [LinkedIn](https://www.linkedin.com/in/montaltomonellamarco): "
+        "Professional background and experience.\n"
+    )
+
+
 # ─── Main ────────────────────────────────────────────────────────────────────
 
 def main():
@@ -470,6 +505,10 @@ def main():
     # Generate sitemap (static pages + posts)
     SITEMAP.write_text(generate_sitemap(posts), encoding="utf-8")
     print(f"  Generated: sitemap.xml ({len(STATIC_PAGES) + len(posts)} URL(s))")
+
+    # Generate llms.txt (site map for LLMs)
+    LLMS.write_text(generate_llms(posts), encoding="utf-8")
+    print(f"  Generated: llms.txt")
 
     print(f"\nDone! {len(posts)} post(s) built.")
 

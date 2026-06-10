@@ -1,0 +1,21 @@
+# Marco Montalto Monella
+
+> Personal website and blog of Marco Montalto Monella, a software engineer based in the San Francisco Bay Area. Currently at Pure Storage, formerly a Production Engineer on Core Data at Meta. Alumnus of NYU and Politecnico di Torino.
+
+Marco is a software engineer who builds infrastructure at scale. He cares about innovation, health, and the environment. Outside of work he does gymnastics, beach volleyball, and running.
+
+## Main pages
+
+- [Home](https://mmmarco.com/): Overview of who Marco is, what drives him, his journey, and how to get in touch.
+- [Blog](https://mmmarco.com/blog/): Thoughts on software engineering, technology, and life.
+- [Contact](https://mmmarco.com/contact/): Contact form for getting in touch.
+
+## Blog posts
+
+- [How Claude Rebuilt This Website](https://mmmarco.com/post/how-claude-rebuilt-this-website/): The story of how I teamed up with an AI assistant to redesign and modernize my personal website from scratch.
+
+## Optional
+
+- [PGP/GPG public key](https://mmmarco.com/pgpkey.html): Public key for sending Marco encrypted email.
+- [GitHub](https://github.com/MarcoMontaltoMonella): Marco's open-source code and projects.
+- [LinkedIn](https://www.linkedin.com/in/montaltomonellamarco): Professional background and experience.
