@@ -95,7 +95,13 @@ console.log("\n=== Homepage (index.html) ===");
   // Uses root-relative paths (not absolute mmmarco.com URLs)
   assert(!html.includes("https://mmmarco.com/css"), "no absolute CSS paths");
   assert(!html.includes("https://mmmarco.com/js"), "no absolute JS paths");
-  assert(!html.includes("https://mmmarco.com/img"), "no absolute image paths");
+  // Asset references must stay root-relative (portable). Absolute URLs in
+  // structured data / canonical tags are expected and allowed.
+  assert(
+    !html.includes('src="https://mmmarco.com/img') &&
+      !html.includes("url('https://mmmarco.com/img"),
+    "no absolute image asset paths"
+  );
 
   // Has navigation
   assert(html.includes("Blog"), "has Blog nav link");
@@ -267,8 +273,32 @@ console.log("\n=== Hugo artifacts removed ===");
   assert(!fileExists("post/index.html"), "no post/index.html");
   assert(!fileExists("post/index.xml"), "no post/index.xml");
   assert(!fileExists("index.xml"), "no root index.xml");
-  assert(!fileExists("sitemap.xml"), "no sitemap.xml");
   assert(!fileExists("post/page"), "no post/page/ directory");
+}
+
+// ===================================================================
+console.log("\n=== SEO ===");
+// ===================================================================
+{
+  assert(fileExists("robots.txt"), "robots.txt exists");
+  const robots = readFile("robots.txt");
+  assert(robots.includes("Sitemap:"), "robots.txt references sitemap");
+
+  assert(fileExists("sitemap.xml"), "sitemap.xml exists");
+  const sitemap = readFile("sitemap.xml");
+  assert(sitemap.includes("<urlset"), "sitemap.xml is a valid urlset");
+  assert(sitemap.includes("https://mmmarco.com/"), "sitemap lists homepage");
+  assert(
+    sitemap.includes("https://mmmarco.com/post/how-claude-rebuilt-this-website/"),
+    "sitemap lists blog post"
+  );
+
+  const home = readFile("index.html");
+  assert(
+    home.includes('application/ld+json') && home.includes('"@type": "Person"'),
+    "homepage has Person structured data"
+  );
+  assert(home.includes('rel="canonical"'), "homepage has canonical link");
 }
 
 // ===================================================================

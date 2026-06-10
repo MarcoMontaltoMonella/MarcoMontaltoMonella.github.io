@@ -27,6 +27,16 @@ ROOT = Path(__file__).parent
 POSTS_DIR = ROOT / "_posts"
 OUTPUT_DIR = ROOT / "post"
 BLOG_INDEX = ROOT / "blog" / "index.html"
+SITEMAP = ROOT / "sitemap.xml"
+SITE_URL = "https://mmmarco.com"
+
+# Static pages to include in the sitemap (path, change-frequency, priority)
+STATIC_PAGES = [
+    ("/", "monthly", "1.0"),
+    ("/blog/", "weekly", "0.8"),
+    ("/contact/", "yearly", "0.5"),
+    ("/pgpkey.html", "yearly", "0.3"),
+]
 
 
 # ─── Minimal Markdown → HTML converter ───────────────────────────────────────
@@ -384,6 +394,40 @@ def generate_blog_index(posts):
 """
 
 
+def generate_sitemap(posts):
+    """Generate sitemap.xml from the static pages plus all blog posts."""
+    today = datetime.now().strftime("%Y-%m-%d")
+    urls = []
+
+    for path, changefreq, priority in STATIC_PAGES:
+        urls.append(
+            "  <url>\n"
+            f"    <loc>{SITE_URL}{path}</loc>\n"
+            f"    <lastmod>{today}</lastmod>\n"
+            f"    <changefreq>{changefreq}</changefreq>\n"
+            f"    <priority>{priority}</priority>\n"
+            "  </url>"
+        )
+
+    for p in posts:
+        lastmod = p["date_str"] if p["date"] != datetime.min else today
+        urls.append(
+            "  <url>\n"
+            f"    <loc>{SITE_URL}/post/{p['slug']}/</loc>\n"
+            f"    <lastmod>{lastmod}</lastmod>\n"
+            "    <changefreq>yearly</changefreq>\n"
+            "    <priority>0.7</priority>\n"
+            "  </url>"
+        )
+
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "\n".join(urls)
+        + "\n</urlset>\n"
+    )
+
+
 # ─── Main ────────────────────────────────────────────────────────────────────
 
 def main():
@@ -422,6 +466,10 @@ def main():
     blog_html = generate_blog_index(posts)
     BLOG_INDEX.write_text(blog_html, encoding="utf-8")
     print(f"  Generated: blog/index.html ({len(posts)} post(s))")
+
+    # Generate sitemap (static pages + posts)
+    SITEMAP.write_text(generate_sitemap(posts), encoding="utf-8")
+    print(f"  Generated: sitemap.xml ({len(STATIC_PAGES) + len(posts)} URL(s))")
 
     print(f"\nDone! {len(posts)} post(s) built.")
 
