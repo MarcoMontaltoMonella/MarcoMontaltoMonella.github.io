@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mmmarco.com/sitemap.xml
