@@ -87,8 +87,9 @@ console.log("\n=== Homepage (index.html) ===");
   assert(!html.includes('id="portfolio"'), "removed empty portfolio section");
   assert(!html.includes("sponsor-1"), "removed empty sponsors section");
 
-  // Timeline updated
-  assert(html.includes("2023"), "timeline includes recent years");
+  // Timeline reaches the present (robust to the actual current marker rather
+  // than a hardcoded year that silently rots each January)
+  assert(/2019|Present/.test(html), "timeline reaches the present");
   assert(html.includes("Pure Storage"), "mentions Pure Storage");
   assert(html.includes("Meta"), "mentions Meta");
 
@@ -102,6 +103,13 @@ console.log("\n=== Homepage (index.html) ===");
       !html.includes("url('https://mmmarco.com/img"),
     "no absolute image asset paths"
   );
+
+  // Performance: Font Awesome icon font replaced by inline SVG icons
+  assert(!html.includes("font-awesome"), "no Font Awesome stylesheet");
+  assert(html.includes('class="icon'), "uses inline SVG icons");
+  // Below-the-fold images carry dimensions and are lazy-loaded (avoids CLS)
+  assert(html.includes('loading="lazy"'), "images are lazy-loaded");
+  assert(html.includes('rel="preload" as="image"'), "preloads the hero image");
 
   // Has navigation
   assert(html.includes("Blog"), "has Blog nav link");
@@ -142,8 +150,8 @@ console.log("\n=== Blog (blog/index.html) ===");
   assert(html.includes(">Home<"), "has Home navigation link");
 
   // Has social links in footer
-  assert(html.includes("fa-linkedin"), "footer has LinkedIn icon");
-  assert(html.includes("fa-github"), "footer has GitHub icon");
+  assert(html.includes("icon--linkedin"), "footer has LinkedIn icon");
+  assert(html.includes("icon--github"), "footer has GitHub icon");
 
   // No old analytics
   assert(!html.includes("UA-93253018-1"), "no legacy Universal Analytics");
@@ -223,8 +231,8 @@ console.log("\n=== Blog Post (post/how-claude-rebuilt-this-website) ===");
   assert(html.includes(">Home<"), "has Home navigation link");
 
   // Has social links in footer
-  assert(html.includes("fa-linkedin"), "footer has LinkedIn icon");
-  assert(html.includes("fa-github"), "footer has GitHub icon");
+  assert(html.includes("icon--linkedin"), "footer has LinkedIn icon");
+  assert(html.includes("icon--github"), "footer has GitHub icon");
 
   // Has GA4
   assert(html.includes("G-XXH6Y7X45B"), "has GA4 tag");

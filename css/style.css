@@ -486,6 +486,16 @@ ul, ol {
   box-shadow: var(--shadow-lg);
 }
 
+/* Inline SVG icons — inherit size from font-size and color from currentColor
+   (drop-in replacement for the old Font Awesome icon font). */
+.icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  flex-shrink: 0;
+  vertical-align: -0.125em;
+}
+
 .card__icon {
   display: inline-flex;
   align-items: center;
