@@ -65,9 +65,31 @@
     });
   }
 
-  /* ── Contact form ──
-     The form submits with a native POST (no fetch / preventDefault) so Formspree
-     can serve its reCAPTCHA challenge; on success Formspree redirects to the
-     thank-you page named in the form's hidden _next field. Kept JS-free on
-     purpose — no Google reCAPTCHA scripts ever load on this domain. */
+  /* ── Contact form (Formspree, AJAX) ── */
+  var form = document.getElementById('contactForm');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var successEl = document.getElementById('form-success');
+      var errorEl = document.getElementById('form-error');
+      var data = new FormData(form);
+
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(function (res) {
+        if (res.ok) {
+          if (successEl) { successEl.style.display = 'block'; }
+          if (errorEl) { errorEl.style.display = 'none'; }
+          form.reset();
+        } else {
+          throw new Error('Form submission failed');
+        }
+      }).catch(function () {
+        if (errorEl) { errorEl.style.display = 'block'; }
+        if (successEl) { successEl.style.display = 'none'; }
+      });
+    });
+  }
 })();
