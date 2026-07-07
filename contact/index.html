@@ -54,12 +54,8 @@
     <p>Want to get in touch? Fill out the form below and I will try to get back to you within 24 hours!</p>
 
     <form id="contactForm" action="https://formspree.io/f/mknqeovl" method="POST">
-      <div id="form-success" class="contact-form__message contact-form__message--success">
-        Thank you for contacting me!
-      </div>
-      <div id="form-error" class="contact-form__message contact-form__message--error">
-        Message could not be sent. Please contact me at contact@mmmarco.com instead.
-      </div>
+      <!-- Native POST so Formspree can serve its reCAPTCHA challenge; redirect back after success -->
+      <input type="hidden" name="_next" value="https://mmmarco.com/contact/thanks/">
       <!-- Honeypot: real users never see this; bots that fill it are silently rejected by Formspree -->
       <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
       <div class="form-group">
