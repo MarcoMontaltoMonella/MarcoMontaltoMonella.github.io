@@ -275,6 +275,28 @@ console.log("\n=== Blog Post (post/how-claude-rebuilt-this-website) ===");
 }
 
 // ===================================================================
+console.log("\n=== Security headers (CSP / Referrer-Policy meta) ===");
+// ===================================================================
+{
+  const pages = [
+    "index.html",
+    "contact/index.html",
+    "contact/thanks/index.html",
+    "404.html",
+    "pgpkey.html",
+    "blog/index.html",
+    "post/how-claude-rebuilt-this-website/index.html",
+  ];
+  for (const p of pages) {
+    const html = readFile(p);
+    assert(html.includes('http-equiv="Content-Security-Policy"'), `${p}: has CSP meta`);
+    assert(html.includes('name="referrer"'), `${p}: has Referrer-Policy meta`);
+    // gtag init is externalised, so the CSP script-src needs no 'unsafe-inline'
+    assert(!html.includes("function gtag()"), `${p}: no inline gtag script`);
+  }
+}
+
+// ===================================================================
 console.log("\n=== CSS (css/style.css) ===");
 // ===================================================================
 {

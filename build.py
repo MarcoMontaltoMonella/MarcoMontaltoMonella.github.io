@@ -251,6 +251,8 @@ POST_TEMPLATE = """\
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://formspree.io; form-action 'self' https://formspree.io; base-uri 'none'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{description}">
   <meta name="author" content="Marco Montalto Monella">
@@ -262,14 +264,9 @@ POST_TEMPLATE = """\
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) — init externalised to /js/gtag-init.js so the CSP needs no 'unsafe-inline' -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', 'G-XXH6Y7X45B');
-  </script>
+  <script src="/js/gtag-init.js"></script>
 </head>
 
 <body class="page-inner">
@@ -365,6 +362,8 @@ h64q66 0 113 -47t47 -113v-96h128q52 0 90 -38t38 -90z"/></svg> {p['date_formatted
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://formspree.io; form-action 'self' https://formspree.io; base-uri 'none'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Blog posts by Marco Montalto Monella — software engineering, technology, and more.">
   <meta name="author" content="Marco Montalto Monella">
@@ -376,14 +375,9 @@ h64q66 0 113 -47t47 -113v-96h128q52 0 90 -38t38 -90z"/></svg> {p['date_formatted
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) — init externalised to /js/gtag-init.js so the CSP needs no 'unsafe-inline' -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', 'G-XXH6Y7X45B');
-  </script>
+  <script src="/js/gtag-init.js"></script>
 </head>
 
 <body class="page-inner">
