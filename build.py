@@ -42,6 +42,21 @@ STATIC_PAGES = [
 
 # ─── Minimal Markdown → HTML converter ───────────────────────────────────────
 
+# URL schemes allowed in generated links/images. Anything else (javascript:,
+# data:, vbscript:, …) collapses to "#" so a crafted .md file cannot inject an
+# executable href/src.
+_SAFE_URL_RE = re.compile(r"^(?:https?:|mailto:|tel:|/|#|\./|\.\./)", re.I)
+
+
+def _safe_url(url):
+    url = url.strip()
+    if not _SAFE_URL_RE.match(url):
+        return "#"
+    # The body is HTML-escaped before this runs, but the URL group is not, so
+    # neutralise a double-quote that would otherwise break out of the attribute.
+    return url.replace('"', "&quot;")
+
+
 def md_to_html(text):
     """Convert Markdown to HTML. Handles the most common constructs."""
     lines = text.split("\n")
@@ -66,18 +81,28 @@ def md_to_html(text):
             list_type = None
 
     def inline(s):
+        # Escape first so raw HTML in the Markdown body cannot inject live markup.
+        s = html.escape(s, quote=False)
+
+        def _img(m):
+            alt = m.group(1).replace('"', "&quot;")
+            return f'<img src="{_safe_url(m.group(2))}" alt="{alt}">'
+
+        def _link(m):
+            return f'<a href="{_safe_url(m.group(2))}">{m.group(1)}</a>'
+
         # Images (before links so ![...](...) isn't caught as a link)
-        s = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", r'<img src="\2" alt="\1">', s)
+        s = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", _img, s)
         # Links
-        s = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', s)
+        s = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", _link, s)
         # Bold + italic
         s = re.sub(r"\*\*\*(.+?)\*\*\*", r"<strong><em>\1</em></strong>", s)
         # Bold
         s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
         # Italic
         s = re.sub(r"\*(.+?)\*", r"<em>\1</em>", s)
-        # Inline code
-        s = re.sub(r"`([^`]+)`", lambda m: f"<code>{html.escape(m.group(1))}</code>", s)
+        # Inline code (body is already escaped above, so do not escape again)
+        s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
         # Line break
         s = re.sub(r"  $", "<br>", s)
         return s
@@ -190,21 +215,27 @@ def parse_post(filepath):
     content_md = m.group(2).strip()
     content_html = md_to_html(content_md)
 
-    # Derive slug from filename: YYYY-MM-DD-slug.md → slug
+    # Derive slug from filename: YYYY-MM-DD-slug.md → slug.
+    # Restrict to [a-z0-9-] so a crafted filename cannot traverse out of post/.
     slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filepath.stem)
+    slug = re.sub(r"[^a-z0-9-]", "", slug.lower()).strip("-")
+    if not slug:
+        raise ValueError(f"filename {filepath.name!r} yields an empty slug")
 
-    # Parse date
+    # Parse date; on failure drop it rather than echoing an unparsed raw value.
     date_str = meta.get("date", "")
     try:
         date = datetime.strptime(date_str, "%Y-%m-%d")
         date_formatted = date.strftime("%B %d, %Y")
     except ValueError:
-        date_formatted = date_str
         date = datetime.min
+        date_formatted = ""
 
+    # Escape frontmatter at the source so every template that interpolates these
+    # fields is safe (title/description land in both element and attribute slots).
     return {
-        "title": meta.get("title", slug.replace("-", " ").title()),
-        "description": meta.get("description", ""),
+        "title": html.escape(meta.get("title", slug.replace("-", " ").title()), quote=True),
+        "description": html.escape(meta.get("description", ""), quote=True),
         "date": date,
         "date_formatted": date_formatted,
         "date_str": date_str,
@@ -220,6 +251,8 @@ POST_TEMPLATE = """\
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://formspree.io; form-action 'self' https://formspree.io; base-uri 'none'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{description}">
   <meta name="author" content="Marco Montalto Monella">
@@ -231,14 +264,9 @@ POST_TEMPLATE = """\
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) — init externalised to /js/gtag-init.js so the CSP needs no 'unsafe-inline' -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', 'G-XXH6Y7X45B');
-  </script>
+  <script src="/js/gtag-init.js"></script>
 </head>
 
 <body class="page-inner">
@@ -313,8 +341,8 @@ def generate_blog_index(posts):
     for p in posts:
         card = f"""\
         <a class="post-card" href="/post/{p['slug']}/">
-          <h2 class="post-card__title">{html.escape(p['title'])}</h2>
-          <p class="post-card__excerpt">{html.escape(p['description'])}</p>
+          <h2 class="post-card__title">{p['title']}</h2>
+          <p class="post-card__excerpt">{p['description']}</p>
           <div class="post-card__meta">
             <span><svg class="icon icon--calendar" viewBox="0 0 1664 1792" aria-hidden="true" focusable="false" style="width:1em;height:1em;fill:currentColor;vertical-align:-0.125em"><path transform="translate(0 1536) scale(1 -1)" d="M128 -128h288v288h-288v-288zM480 -128h320v288h-320v-288zM128 224h288v320h-288v-320zM480 224h320v320h-320v-320zM128 608h288v288h-288v-288zM864 -128h320v288h-320v-288zM480 608h320v288h-320v-288zM1248 -128h288v288h-288v-288zM864 224h320v320h-320v-320z
 M512 1088v288q0 13 -9.5 22.5t-22.5 9.5h-64q-13 0 -22.5 -9.5t-9.5 -22.5v-288q0 -13 9.5 -22.5t22.5 -9.5h64q13 0 22.5 9.5t9.5 22.5zM1248 224h288v320h-288v-320zM864 608h320v288h-320v-288zM1248 608h288v288h-288v-288zM1280 1088v288q0 13 -9.5 22.5t-22.5 9.5h-64
@@ -334,6 +362,8 @@ h64q66 0 113 -47t47 -113v-96h128q52 0 90 -38t38 -90z"/></svg> {p['date_formatted
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://formspree.io; form-action 'self' https://formspree.io; base-uri 'none'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Blog posts by Marco Montalto Monella — software engineering, technology, and more.">
   <meta name="author" content="Marco Montalto Monella">
@@ -345,14 +375,9 @@ h64q66 0 113 -47t47 -113v-96h128q52 0 90 -38t38 -90z"/></svg> {p['date_formatted
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) — init externalised to /js/gtag-init.js so the CSP needs no 'unsafe-inline' -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){{dataLayer.push(arguments);}}
-    gtag('js', new Date());
-    gtag('config', 'G-XXH6Y7X45B');
-  </script>
+  <script src="/js/gtag-init.js"></script>
 </head>
 
 <body class="page-inner">

@@ -118,6 +118,7 @@ console.log("\n=== Homepage (index.html) ===");
   assert(html.includes('action="https://formspree.io/f/mknqeovl"'), "contact form posts to modern Formspree endpoint");
   assert(!html.includes("formspree.io/contact@"), "no deprecated Formspree email-in-URL endpoint");
   assert(html.includes('name="_gotcha"'), "contact form has spam honeypot");
+  assert(html.includes('name="_next"'), "contact form redirects to a thank-you page after submit");
 
   // Asset files exist
   const assets = extractLocalPaths(html);
@@ -199,6 +200,7 @@ console.log("\n=== Contact (contact/index.html) ===");
   assert(html.includes('action="https://formspree.io/f/mknqeovl"'), "form posts to modern Formspree endpoint");
   assert(!html.includes("formspree.io/contact@"), "no deprecated Formspree email-in-URL endpoint");
   assert(html.includes('name="_gotcha"'), "form has spam honeypot");
+  assert(html.includes('name="_next"'), "form redirects to a thank-you page after submit");
 
   // Has Home nav link
   assert(html.includes(">Home<"), "has Home navigation link");
@@ -208,6 +210,22 @@ console.log("\n=== Contact (contact/index.html) ===");
 
   // Root-relative paths
   assert(!html.includes("https://mmmarco.com/css"), "no absolute CSS paths");
+}
+
+// ===================================================================
+console.log("\n=== Thank-you page (contact/thanks/index.html) ===");
+// ===================================================================
+{
+  const thanksPath = "contact/thanks/index.html";
+  assert(fileExists(thanksPath), "thank-you page exists");
+
+  const html = readFile(thanksPath);
+  assert(html.includes("<!DOCTYPE html>"), "has DOCTYPE");
+  assert(html.includes("/css/style.css"), "uses site stylesheet");
+  assert(/Message sent|Thank you/i.test(html), "shows a confirmation message");
+  assert(html.includes('content="noindex"'), "is noindex (kept out of search results)");
+  assert(!html.includes("font-awesome"), "no Font Awesome stylesheet");
+  assert(html.includes('class="icon'), "uses inline SVG icons");
 }
 
 // ===================================================================
@@ -254,6 +272,28 @@ console.log("\n=== Blog Post (post/how-claude-rebuilt-this-website) ===");
 
   // Root-relative paths
   assert(!html.includes("https://mmmarco.com/css"), "no absolute CSS paths");
+}
+
+// ===================================================================
+console.log("\n=== Security headers (CSP / Referrer-Policy meta) ===");
+// ===================================================================
+{
+  const pages = [
+    "index.html",
+    "contact/index.html",
+    "contact/thanks/index.html",
+    "404.html",
+    "pgpkey.html",
+    "blog/index.html",
+    "post/how-claude-rebuilt-this-website/index.html",
+  ];
+  for (const p of pages) {
+    const html = readFile(p);
+    assert(html.includes('http-equiv="Content-Security-Policy"'), `${p}: has CSP meta`);
+    assert(html.includes('name="referrer"'), `${p}: has Referrer-Policy meta`);
+    // gtag init is externalised, so the CSP script-src needs no 'unsafe-inline'
+    assert(!html.includes("function gtag()"), `${p}: no inline gtag script`);
+  }
 }
 
 // ===================================================================

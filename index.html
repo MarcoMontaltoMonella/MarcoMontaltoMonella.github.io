@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://formspree.io; form-action 'self' https://formspree.io; base-uri 'none'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Marco Montalto Monella — software engineer and multidisciplinary builder: I can build anything tech, teach yoga sculpt, cook, write, and invest in Italian cuisine. Personal website and blog.">
   <meta name="author" content="Marco Montalto Monella">
@@ -51,14 +53,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) — init externalised to /js/gtag-init.js so the CSP needs no 'unsafe-inline' -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXH6Y7X45B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXH6Y7X45B');
-  </script>
+  <script src="/js/gtag-init.js"></script>
 </head>
 
 <body class="page-home">
@@ -233,12 +230,8 @@ q-5 -5 -6 -15t-2 -13q-7 5 0 17.5t2 18.5q-3 6 -10.5 4.5t-12 -4.5t-11.5 -8.5t-9 -6
         <p class="section__subtitle">or use my <a href="/pgpkey.html">public PGP/GPG key</a> for extra security</p>
       </div>
       <form class="contact-form fade-in" id="contactForm" action="https://formspree.io/f/mknqeovl" method="POST">
-        <div id="form-success" class="contact-form__message contact-form__message--success">
-          Thank you for contacting me!
-        </div>
-        <div id="form-error" class="contact-form__message contact-form__message--error">
-          Message could not be sent. Please contact me at contact@mmmarco.com instead.
-        </div>
+        <!-- Native POST so Formspree can serve its reCAPTCHA challenge; redirect back after success -->
+        <input type="hidden" name="_next" value="https://mmmarco.com/contact/thanks/">
         <!-- Honeypot: real users never see this; bots that fill it are silently rejected by Formspree -->
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
         <div class="contact-form__row">
