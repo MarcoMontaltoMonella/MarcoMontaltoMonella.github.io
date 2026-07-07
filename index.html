@@ -182,13 +182,15 @@
         <h2 class="section__title">Contact me</h2>
         <p class="section__subtitle">or use my <a href="/pgpkey.html">public PGP/GPG key</a> for extra security</p>
       </div>
-      <form class="contact-form fade-in" id="contactForm" action="//formspree.io/contact@mmmarco.com" method="POST">
+      <form class="contact-form fade-in" id="contactForm" action="https://formspree.io/f/mknqeovl" method="POST">
         <div id="form-success" class="contact-form__message contact-form__message--success">
           Thank you for contacting me!
         </div>
         <div id="form-error" class="contact-form__message contact-form__message--error">
           Message could not be sent. Please contact me at contact@mmmarco.com instead.
         </div>
+        <!-- Honeypot: real users never see this; bots that fill it are silently rejected by Formspree -->
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
         <div class="contact-form__row">
           <div class="form-group">
             <input type="text" name="name" placeholder="Your Name *" required>

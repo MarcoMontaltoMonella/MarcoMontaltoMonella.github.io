@@ -100,6 +100,11 @@ console.log("\n=== Homepage (index.html) ===");
   // Has navigation
   assert(html.includes("Blog"), "has Blog nav link");
 
+  // Contact form uses the modern Formspree endpoint, not the deprecated email-in-URL one
+  assert(html.includes('action="https://formspree.io/f/mknqeovl"'), "contact form posts to modern Formspree endpoint");
+  assert(!html.includes("formspree.io/contact@"), "no deprecated Formspree email-in-URL endpoint");
+  assert(html.includes('name="_gotcha"'), "contact form has spam honeypot");
+
   // Asset files exist
   const assets = extractLocalPaths(html);
   for (const asset of assets) {
@@ -175,6 +180,11 @@ console.log("\n=== Contact (contact/index.html) ===");
 
   // Has contact form
   assert(html.includes('id="contactForm"'), "has contact form");
+
+  // Modern Formspree endpoint + spam honeypot
+  assert(html.includes('action="https://formspree.io/f/mknqeovl"'), "form posts to modern Formspree endpoint");
+  assert(!html.includes("formspree.io/contact@"), "no deprecated Formspree email-in-URL endpoint");
+  assert(html.includes('name="_gotcha"'), "form has spam honeypot");
 
   // Has Home nav link
   assert(html.includes(">Home<"), "has Home navigation link");
