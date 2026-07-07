@@ -1,0 +1,10 @@
+# macOS / editor cruft
+.DS_Store
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+
+# Claude Code local files (machine-specific; never publish)
+.claude/settings.local.json
+.claude/launch.json
