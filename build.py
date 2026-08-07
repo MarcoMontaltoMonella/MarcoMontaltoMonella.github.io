@@ -281,6 +281,7 @@ POST_TEMPLATE = """\
       <ul class="nav__links">
         <li><a href="/">Home</a></li>
         <li><a href="/#about">About</a></li>
+        <li><a href="/places/">Places</a></li>
         <li><a href="/blog/">Blog</a></li>
         <li><a href="/contact/">Contact</a></li>
       </ul>
@@ -392,6 +393,7 @@ h64q66 0 113 -47t47 -113v-96h128q52 0 90 -38t38 -90z"/></svg> {p['date_formatted
       <ul class="nav__links">
         <li><a href="/">Home</a></li>
         <li><a href="/#about">About</a></li>
+        <li><a href="/places/">Places</a></li>
         <li><a href="/blog/" class="active">Blog</a></li>
         <li><a href="/contact/">Contact</a></li>
       </ul>
